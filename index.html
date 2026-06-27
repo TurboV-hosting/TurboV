@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>TurboV - Custom Discord Bot Development & Discord Dev Solutions</title>
+    <link rel="icon" type="image/jpeg" href="dev.jpg">
+    
+    <meta name="description" content="TurboV provides supercharged Discord bot development services and premium Discord dev solutions. Get high-performance custom bots tailored for your server.">
+    <meta name="keywords" content="discord bot, discord bot dev, discord, Discord Dev, custom discord bots, discord bot programming, discord js, discord py, discord development services, TurboV hosting">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="TurboV">
+
+    <meta property="og:title" content="TurboV | Professional Discord Bot Development">
+    <meta property="og:description" content="Supercharged Discord Dev solutions. Get custom bot quotations for moderation, economy, and unique server features.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="dev.jpg">
+    <meta property="og:site_name" content="TurboV">
+    <meta name="theme-color" content="#00f2fe"> 
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <style>
+        /* Color Palette & Base Styles */
+        :root {
+            --bg-dark: #0b141a;
+            --card-bg: rgba(19, 34, 44, 0.9); /* Slight transparency to show background */
+            --primary-teal: #00f2fe;
+            --accent-blue: #0072ff;
+            --text-light: #e2f1f8;
+            --text-muted: #8ca3b1;
+            --border-color: #1e3545;
+            --discord-blurple: #5865F2;
+            --discord-blurple-hover: #4752C4;
+            --star-color: #ffb703;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            /* Set background image from background.png */
+            background-image: url('background.png');
+            /* Ensure the background covers the entire screen and scales correctly */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Fixed background during scroll */
+            /* Add a solid background color as a fallback in case image doesn't load */
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 2rem 0;
+        }
+
+        /* Main Container */
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .brand-title {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--primary-teal), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-subtitle {
+            font-size: 1rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 3rem;
+        }
+
+        /* Main Action Card & Layout Buttons */
+        .cta-card, .socials-card, .reviews-card {
+            background: linear-gradient(145deg, var(--card-bg), #0e1b24);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-card h2, .socials-card h2, .reviews-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-quote {
+            width: 100%;
+            max-width: 280px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3);
+            display: inline-block;
+        }
+
+        .btn-quote:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
+            background: linear-gradient(135deg, var(--primary-teal), var(--accent-blue));
+        }
+
+        /* Social Media Section Styling */
+        .socials-card {
+            padding: 2rem 2.5rem;
+        }
+
+        .btn-discord {
+            width: 100%;
+            max-width: 280px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            background-color: var(--discord-blurple);
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-discord:hover {
+            transform: translateY(-2px);
+            background-color: var(--discord-blurple-hover);
+            box-shadow: 0 6px 20px rgba(88, 101, 242, 0.5);
+        }
+
+        /* Horizontal Reviews Section Component */
+        .reviews-card {
+            padding: 2rem 1.5rem;
+            text-align: left;
+        }
+        
+        .reviews-card h2 {
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .reviews-container {
+            display: flex;
+            flex-direction: row;
+            gap: 1.25rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color) transparent;
+        }
+
+        /* Custom Scrollbar Styles for Webkit */
+        .reviews-container::-webkit-scrollbar {
+            height: 6px;
+        }
+        .reviews-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .reviews-container::-webkit-scrollbar-thumb {
+            background-color: var(--border-color);
+            border-radius: 10px;
+        }
+        .reviews-container::-webkit-scrollbar-thumb:hover {
+            background-color: var(--text-muted);
+        }
+
+        .review-item {
+            flex: 0 0 280px;
+            scroll-snap-align: start;
+            background: rgba(11, 20, 26, 0.4);
+            border: 1px solid rgba(30, 53, 69, 0.6);
+            padding: 1.2rem;
+            border-radius: 10px;
+            transition: border-color 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .review-item:hover {
+            border-color: rgba(0, 242, 254, 0.3);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .reviewer-name {
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 0.95rem;
+        }
+
+        .review-stars {
+            color: var(--star-color);
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .review-text {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        /* Bottom Footer Area */
+        .footer-nav {
+            margin-top: 3rem;
+        }
+
+        /* Reviews Button Styling */
+        .btn-reviews {
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            display: inline-block;
+        }
+
+        .btn-reviews:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-teal);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.15);
+        }
+
+        /* Modal Popup Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 10, 14, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border: 1px solid var(--primary-teal);
+            padding: 2.5rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 480px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.15);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.6rem;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-control {
+            width: 100%;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            padding: 0.8rem 1rem;
+            color: #ffffff;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-teal);
+        }
+
+        select.form-control {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%238ca3b1'><polygon points='0,0 10,0 5,5'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Form Buttons */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-submit {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary-teal), var(--accent-blue));
+            color: var(--bg-dark);
+            font-weight: 700;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="brand-title">TurboV</h1>
+        <p class="brand-subtitle">Supercharged Hosting & Solutions</p>
+
+        <div class="cta-card">
+            <h2>Discord Development Services</h2>
+            <div class="cta-buttons">
+                <button class="btn-quote" id="openModalBtn">Get a Quotation</button>
+            </div>
+        </div>
+
+        <div class="socials-card">
+            <h2>Connect With Us</h2>
+            <div class="cta-buttons">
+                <a href="https://discord.gg/ENyAAXtN3Z" target="_blank" rel="noopener noreferrer" class="btn-discord">
+                    Join Our Discord
+                </a>
+            </div>
+        </div>
+
+        <div class="reviews-card">
+            <h2>Recent Client Reviews</h2>
+            <div class="reviews-container" id="liveReviewsContainer">
+                <p style="text-align: center; width: 100%; color: var(--text-muted); font-size: 0.9rem; padding: 1rem 0;">
+                    Loading live reviews...
+                </p>
+            </div>
+        </div>
+
+        <div class="footer-nav">
+            <a href="/reviews" class="btn-reviews">View All Reviews</a>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Request a Quote</h3>
+                <p>Tell us about your custom Discord Bot project.</p>
+            </div>
+            
+            <form id="quoteForm">
+                <div class="form-group">
+                    <label for="clientName">Your Name</label>
+                    <input type="text" id="clientName" class="form-control" placeholder="John Doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="clientContact">Discord Username or Email</label>
+                    <input type="text" id="clientContact" class="form-control" placeholder="username#0000 or email@domain.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="botLanguage">Preferred Bot Language</label>
+                    <select id="botLanguage" class="form-control" required>
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="botStyle">Bot Style & Functionality Description</label>
+                    <textarea id="botStyle" class="form-control" placeholder="Describe the style (e.g., futuristic, economy, moderation) and features you need..." required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="closeModalBtn">Cancel</button>
+                    <button type="submit" class="btn-submit" id="submitBtn">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 2. Initialize Firebase Instance
+        const firebaseConfig = {
+            apiKey: "AIzaSyCS5WN2sPDYFDChynMl_xbutjbPQO4FON0",
+            authDomain: "turbov-dev.firebaseapp.com",
+            projectId: "turbov-dev",
+            storageBucket: "turbov-dev.firebasestorage.app",
+            messagingSenderId: "251894886123",
+            appId: "1:251894886123:web:8ce6847f9a2969fec9d8ae",
+            measurementId: "G-MFYZPXGP87"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const modalOverlay = document.getElementById('modalOverlay');
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const quoteForm = document.getElementById('quoteForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const reviewsContainer = document.getElementById('liveReviewsContainer');
+
+        // Webhook configuration
+        const webhookUrl = "https://discord.com/api/webhooks/1520427877177229423/8jVIzxXZ1hVWx4H6n9YMDEDatfjS8zuroOIPEcMNG1OYJOAU5DzxaurCAnVMlwiqUkAu";
+
+        // Empty data array waiting for your external database connection or manual injection loop.
+        const dynamicReviews = [];
+
+        // Function to render layout blocks cleanly horizontally on the page
+        function displayLiveReviews(reviews) {
+            if(!reviews || reviews.length === 0) {
+                reviewsContainer.innerHTML = `<p style="text-align: center; width: 100%; color: var(--text-muted); font-size: 0.9rem; padding: 1rem 0;">No verified reviews to display yet.</p>`;
+                return;
+            }
+            
+            reviewsContainer.innerHTML = reviews.map(rev => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <span class="reviewer-name">@${escapeHTML(rev.name)}</span>
+                        <span class="review-stars">${"★".repeat(rev.stars)}${"☆".repeat(5 - rev.stars)}</span>
+                    </div>
+                    <p class="review-text">"${escapeHTML(rev.text)}"</p>
+                </div>
+            `).join('');
+        }
+
+        // Initialize display immediately
+        displayLiveReviews(dynamicReviews);
+
+        // Open Modal
+        openModalBtn.addEventListener('click', () => {
+            modalOverlay.classList.add('active');
+        });
+
+        // Close Modal via Cancel Button
+        closeModalBtn.addEventListener('click', () => {
+            modalOverlay.classList.remove('active');
+            quoteForm.reset();
+        });
+
+        // Close Modal if clicking outside the form area
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+                quoteForm.reset();
+            }
+        });
+
+        // Form Submit Handler linked to Discord Webhook
+        quoteForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Capture form data
+            const name = document.getElementById('clientName').value;
+            const contact = document.getElementById('clientContact').value;
+            const language = document.getElementById('botLanguage').value;
+            const style = document.getElementById('botStyle').value;
+
+            // Change button state to visual loading text
+            submitBtn.textContent = "Sending...";
+            submitBtn.disabled = true;
+
+            // Construct neat embed object matching logo colors (Teal Hex #00f2fe -> Int 62206)
+            const payload = {
+                embeds: [{
+                    title: "🚀 New Discord Bot Quote Request",
+                    color: 62206, 
+                    fields: [
+                        { name: "👤 Client Name", value: name, inline: true },
+                        { name: "📞 Contact Info", value: contact, inline: true },
+                        { name: "💻 Target Language", value: language.toUpperCase(), inline: true },
+                        { name: "🎨 Style & Requirements Description", value: style, inline: false }
+                    ],
+                    timestamp: new Date().toISOString(),
+                    footer: { text: "TurboV Solutions System" }
+                }]
+            };
+
+            // Post to Discord Webhook Endpoint
+            fetch(webhookUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert(`Thank you, ${name}! Your quotation request has been sent successfully.`);
+                } else {
+                    alert("There was an issue sending your request. Please try again later.");
+                }
+            })
+            .catch(error => {
+                console.error("Error sending webhook:", error);
+                alert("An error occurred. Check network logs.");
+            })
+            .finally(() => {
+                // Restore form interface state
+                submitBtn.textContent = "Submit Request";
+                submitBtn.disabled = false;
+                modalOverlay.classList.remove('active');
+                quoteForm.reset();
+            });
+        });
+    </script>
+
+</body>
+</html>
