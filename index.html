@@ -107,6 +107,7 @@
 
         .cta-buttons {
             display: flex;
+            flex-direction: column;
             gap: 1rem;
             justify-content: center;
             align-items: center;
@@ -134,6 +135,89 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
             background: linear-gradient(135deg, var(--primary-teal), var(--accent-blue));
+        }
+
+        /* Tech Details Dropdown Component */
+        .dropdown-wrapper {
+            width: 100%;
+            max-width: 280px;
+            margin-top: 0.5rem;
+            text-align: left;
+        }
+
+        .btn-dropdown-toggle {
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-dropdown-toggle:hover {
+            border-color: var(--primary-teal);
+            color: #ffffff;
+        }
+
+        .btn-dropdown-toggle .arrow-icon {
+            transition: transform 0.3s ease;
+            font-size: 0.75rem;
+        }
+
+        .dropdown-wrapper.active .btn-dropdown-toggle .arrow-icon {
+            transform: rotate(180deg);
+            color: var(--primary-teal);
+        }
+
+        .dropdown-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: rgba(11, 20, 26, 0.5);
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+
+        .dropdown-wrapper.active .dropdown-content {
+            max-height: 400px;
+            border: 1px solid rgba(30, 53, 69, 0.6);
+        }
+
+        .tech-info-section {
+            padding: 1rem;
+        }
+
+        .tech-info-section:not(:last-child) {
+            border-bottom: 1px solid rgba(30, 53, 69, 0.4);
+        }
+
+        .tech-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tech-title.py { color: #ffde57; }
+        .tech-title.java { color: #f89820; }
+
+        .tech-desc {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            line-height: 1.4;
         }
 
         /* Social Media Section Styling */
@@ -428,6 +512,24 @@
             <h2>Discord Development Services</h2>
             <div class="cta-buttons">
                 <button class="btn-quote" id="openModalBtn">Get a Quotation</button>
+                
+                <div class="dropdown-wrapper" id="techDropdown">
+                    <button class="btn-dropdown-toggle" id="dropdownToggleBtn">
+                        <span>Supported Languages</span>
+                        <span class="arrow-icon">▼</span>
+                    </button>
+                    <div class="dropdown-content">
+                        <div class="tech-info-section">
+                            <div class="tech-title py">🐍 Python Development</div>
+                            <div class="tech-desc">Built using high-performance asynchronous libraries (discord.py). Ideal for fast execution, real-time tracking, OSC integrations, and quick scaling.</div>
+                        </div>
+                        <div class="tech-info-section">
+                            <div class="tech-title java">☕ Java Development</div>
+                            <div class="tech-desc">Engineered via JDA (Java Discord API). Crafted for enterprise scalability, maximum uptime stability, multi-threaded operations, and heavy data environments.</div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -495,7 +597,7 @@
     </div>
 
     <script>
-        // 2. Initialize Firebase Instance
+        // Initialize Firebase Instance
         const firebaseConfig = {
             apiKey: "AIzaSyCS5WN2sPDYFDChynMl_xbutjbPQO4FON0",
             authDomain: "turbov-dev.firebaseapp.com",
@@ -515,13 +617,34 @@
         const submitBtn = document.getElementById('submitBtn');
         const reviewsContainer = document.getElementById('liveReviewsContainer');
 
+        // Dropdown Elements
+        const techDropdown = document.getElementById('techDropdown');
+        const dropdownToggleBtn = document.getElementById('dropdownToggleBtn');
+
+        // Toggle dropdown open/close state
+        dropdownToggleBtn.addEventListener('click', () => {
+            techDropdown.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking anywhere outside of it
+        window.addEventListener('click', (e) => {
+            if (!techDropdown.contains(e.target)) {
+                techDropdown.classList.remove('active');
+            }
+        });
+
         // Webhook configuration
         const webhookUrl = "https://discord.com/api/webhooks/1520427877177229423/8jVIzxXZ1hVWx4H6n9YMDEDatfjS8zuroOIPEcMNG1OYJOAU5DzxaurCAnVMlwiqUkAu";
 
-        // Empty data array waiting for your external database connection or manual injection loop.
         const dynamicReviews = [];
 
-        // Function to render layout blocks cleanly horizontally on the page
+        // Simple helper to safely escape dynamic layout text
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
         function displayLiveReviews(reviews) {
             if(!reviews || reviews.length === 0) {
                 reviewsContainer.innerHTML = `<p style="text-align: center; width: 100%; color: var(--text-muted); font-size: 0.9rem; padding: 1rem 0;">No verified reviews to display yet.</p>`;
@@ -539,21 +662,17 @@
             `).join('');
         }
 
-        // Initialize display immediately
         displayLiveReviews(dynamicReviews);
 
-        // Open Modal
         openModalBtn.addEventListener('click', () => {
             modalOverlay.classList.add('active');
         });
 
-        // Close Modal via Cancel Button
         closeModalBtn.addEventListener('click', () => {
             modalOverlay.classList.remove('active');
             quoteForm.reset();
         });
 
-        // Close Modal if clicking outside the form area
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay) {
                 modalOverlay.classList.remove('active');
@@ -561,21 +680,17 @@
             }
         });
 
-        // Form Submit Handler linked to Discord Webhook
         quoteForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            // Capture form data
             const name = document.getElementById('clientName').value;
             const contact = document.getElementById('clientContact').value;
             const language = document.getElementById('botLanguage').value;
             const style = document.getElementById('botStyle').value;
 
-            // Change button state to visual loading text
             submitBtn.textContent = "Sending...";
             submitBtn.disabled = true;
 
-            // Construct neat embed object matching logo colors (Teal Hex #00f2fe -> Int 62206)
             const payload = {
                 embeds: [{
                     title: "🚀 New Discord Bot Quote Request",
@@ -591,7 +706,6 @@
                 }]
             };
 
-            // Post to Discord Webhook Endpoint
             fetch(webhookUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -609,7 +723,6 @@
                 alert("An error occurred. Check network logs.");
             })
             .finally(() => {
-                // Restore form interface state
                 submitBtn.textContent = "Submit Request";
                 submitBtn.disabled = false;
                 modalOverlay.classList.remove('active');
