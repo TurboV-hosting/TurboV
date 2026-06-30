@@ -137,6 +137,32 @@
             background: linear-gradient(135deg, var(--primary-teal), var(--accent-blue));
         }
 
+        /* Secondary Button Styling for Pre-made apps */
+        .btn-secondary {
+            width: 100%;
+            max-width: 280px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-teal);
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+            color: #ffffff;
+        }
+
         /* Tech Details Dropdown Component */
         .dropdown-wrapper {
             width: 100%;
@@ -512,6 +538,8 @@
             <h2>Discord Development Services</h2>
             <div class="cta-buttons">
                 <button class="btn-quote" id="openModalBtn">Get a Quotation</button>
+                
+                <a href="/shop" class="btn-secondary">View Premade Software/Apps</a>
                 
                 <div class="dropdown-wrapper" id="techDropdown">
                     <button class="btn-dropdown-toggle" id="dropdownToggleBtn">
