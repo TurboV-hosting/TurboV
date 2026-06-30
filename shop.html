@@ -118,6 +118,7 @@
             border: none;
             box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3);
             display: inline-block;
+            margin-top: 1.5rem;
             margin-bottom: 1rem;
         }
 
@@ -253,10 +254,18 @@
                 <img src="Clonehero.png" alt="Clone Hero to VRChat OSC Showcase" class="product-image">
                 <div class="product-desc">Stream and sync your live performance data directly into your VRChat chatbox or avatar display seamlessly via OSC network protocols.</div>
                 <div class="product-price" id="productPrice">A$1.99</div>
-                <button class="btn-buy" id="buyProductBtn">Purchase Now</button>
-                <br>
-                <button class="btn-home" id="returnHomeBtn">Return to home</button>
             </div>
+
+            <div class="product-item">
+                <div class="product-name">Soniclean</div>
+                <img src="soniclean.png" alt="Soniclean Preview" class="product-image">
+                <div class="product-desc">Soniclean is a software that helps with leveling audio & does Audio Compression. best for podcasts and general editors!</div>
+                <div class="product-price" id="sonicleanPrice">A$30.99</div>
+            </div>
+
+            <button class="btn-buy" id="buyProductBtn">Purchase Now</button>
+            <br>
+            <button class="btn-home" id="returnHomeBtn">Return to home</button>
         </div>
     </div>
 
@@ -274,25 +283,33 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // Currency Exchange Config Setup
-        const basePriceAUD = 1.99;
+        // Separate base configurations for individual product tracking
+        const cloneHeroBaseAUD = 1.99;
+        const sonicleanBaseAUD = 30.99;
+
+        // Exchange rate map config
         const exchangeRates = {
-            AUD: { rate: 1.00, symbol: "A$" },
-            USD: { rate: 0.6884, symbol: "$" },  // 1.99 * 0.6884 = 1.37 USD
-            CAD: { rate: 0.9799, symbol: "C$" }   // 1.99 * 0.9799 = 1.95 CAD
+            AUD: { rate: 1.0000, symbol: "A$" },
+            USD: { rate: 0.69184, symbol: "$" },  // 30.99 * 0.69184 ≈ 21.44 USD | 1.99 * 0.6884 ≈ 1.37 USD
+            CAD: { rate: 0.98193, symbol: "C$" }  // 30.99 * 0.98193 ≈ 30.43 CAD | 1.99 * 0.9799 ≈ 1.95 CAD
         };
 
         const currencySelect = document.getElementById('currencySelect');
         const productPrice = document.getElementById('productPrice');
+        const sonicleanPrice = document.getElementById('sonicleanPrice');
         const buyProductBtn = document.getElementById('buyProductBtn');
         const returnHomeBtn = document.getElementById('returnHomeBtn');
 
-        // Handles dynamic price conversions
+        // Handles dynamic price conversions for all products independently
         function updatePrice() {
             const selectedCurrency = currencySelect.value;
             const config = exchangeRates[selectedCurrency];
-            const convertedPrice = (basePriceAUD * config.rate).toFixed(2);
-            productPrice.textContent = `${config.symbol}${convertedPrice}`;
+            
+            const cloneHeroFinal = (cloneHeroBaseAUD * config.rate).toFixed(2);
+            const sonicleanFinal = (sonicleanBaseAUD * config.rate).toFixed(2);
+            
+            productPrice.textContent = `${config.symbol}${cloneHeroFinal}`;
+            sonicleanPrice.textContent = `${config.symbol}${sonicleanFinal}`;
         }
 
         currencySelect.addEventListener('change', updatePrice);
