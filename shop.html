@@ -262,6 +262,7 @@
                 <img src="soniclean.png" alt="Soniclean Preview" class="product-image">
                 <div class="product-desc">Soniclean is a software that helps with leveling audio & does Audio Compression. best for podcasts and general editors!</div>
                 <div class="product-price" id="sonicleanPrice">A$30.99</div>
+                <button class="btn-buy" id="buySonicleanBtn">Purchase Now</button>
             </div>
 
             <br>
@@ -298,6 +299,7 @@
         const productPrice = document.getElementById('productPrice');
         const sonicleanPrice = document.getElementById('sonicleanPrice');
         const buyProductBtn = document.getElementById('buyProductBtn');
+        const buySonicleanBtn = document.getElementById('buySonicleanBtn');
         const returnHomeBtn = document.getElementById('returnHomeBtn');
 
         // Handles dynamic price conversions for all products independently
@@ -314,8 +316,13 @@
 
         currencySelect.addEventListener('change', updatePrice);
 
-        // Redirects straight to the new invite link
+        // Redirects straight to the new invite link (Clone Hero)
         buyProductBtn.addEventListener('click', () => {
+            window.location.href = "https://discord.gg/fcnTvy9qJ";
+        });
+
+        // Redirects straight to the new invite link (Soniclean)
+        buySonicleanBtn.addEventListener('click', () => {
             window.location.href = "https://discord.gg/fcnTvy9qJ";
         });
 
