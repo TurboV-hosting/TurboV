@@ -115,8 +115,15 @@
             margin-bottom: 1.5rem;
         }
 
+        /* Button Container & Buttons */
+        .card-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
         .btn {
-            display: inline-block;
+            display: block;
             padding: 0.8rem 1.5rem;
             background-color: #ff4655;
             color: #fff;
@@ -130,6 +137,14 @@
             background-color: #e03e4d;
         }
 
+        .btn-discord {
+            background-color: #5865F2;
+        }
+
+        .btn-discord:hover {
+            background-color: #4752C4;
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -139,6 +154,22 @@
             font-size: 0.9rem;
             border-top: 1px solid #1f2430;
             margin-top: 4rem;
+        }
+
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-link {
+            color: #5865F2;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: #7983f5;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -163,7 +194,10 @@
                     <img src="AURP.png" alt="Australian Roleplay Logo" class="server-logo">
                     <h3>Australian Roleplay</h3>
                     <p class="subtitle">FiveM/GTARP</p>
-                    <a href="#" class="btn">Connect Now</a>
+                    <div class="card-buttons">
+                        <a href="https://cfx.re/join/5ooy8lr" class="btn" target="_blank">Connect Now</a>
+                        <a href="https://discord.gg/CVedgwW4W4" class="btn btn-discord" target="_blank">Join Discord</a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -172,7 +206,8 @@
 
     <!-- Footer Section -->
     <footer>
-        &copy; TurboV Gaming Network. All rights reserved.
+        <p>&copy; TurboV Gaming Network. All rights reserved.</p>
+        <p><a href="https://discord.gg/Vav64w87Sd" class="footer-link" target="_blank">TurboV website Discord server</a></p>
     </footer>
 
 </body>
