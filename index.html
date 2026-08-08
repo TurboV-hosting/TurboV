@@ -15,7 +15,7 @@
 
         :root {
             --bg-color: #050505;
-            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-bg: rgba(15, 15, 15, 0.65);
             --border-color: rgba(255, 255, 255, 0.12);
             --border-hover: rgba(255, 255, 255, 0.4);
             --text-primary: #ffffff;
@@ -34,28 +34,81 @@
             position: relative;
         }
 
-        /* Subtle Animated Background Grid */
+        /* Ambient Radial Glow Over Background */
         body::before {
             content: '';
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
-                radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08) 0%, transparent 60%),
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 100% 100%, 40px 40px, 40px 40px;
-            z-index: -1;
+            background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            z-index: 0;
             pointer-events: none;
+        }
+
+        /* ------------------------------------ */
+        /* Animated Code Overlay Background */
+        /* ------------------------------------ */
+        .code-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            opacity: 0.18;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            color: #ffffff;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .code-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            white-space: pre;
+            user-select: none;
+        }
+
+        /* Column Animations & Offset Speeds */
+        .col-1 { animation: floatCode 22s linear infinite; }
+        .col-2 { animation: floatCode 28s linear infinite; animation-delay: -7s; }
+        .col-3 { animation: floatCode 20s linear infinite; animation-delay: -12s; }
+        .col-4 { animation: floatCode 25s linear infinite; animation-delay: -4s; }
+
+        @keyframes floatCode {
+            0% { transform: translateY(100vh); }
+            100% { transform: translateY(-100%); }
+        }
+
+        .code-block {
+            line-height: 1.4;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+
+        .lang-tag {
+            font-weight: bold;
+            opacity: 0.5;
+            margin-bottom: 0.2rem;
+        }
+
+        /* ------------------------------------ */
+        /* Content Styling */
+        /* ------------------------------------ */
+        header, .container, footer {
+            position: relative;
+            z-index: 1;
         }
 
         /* Hero / Header Section */
         header {
             padding: 6rem 2rem 4rem;
             text-align: center;
-            position: relative;
             animation: fadeInDown 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -119,8 +172,8 @@
 
         .server-card {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border-color);
             border-radius: 16px;
             width: 340px;
@@ -167,7 +220,7 @@
             margin-bottom: 2rem;
         }
 
-        /* Button Styling & Animated States */
+        /* Button Styling */
         .card-buttons {
             display: flex;
             flex-direction: column;
@@ -213,7 +266,8 @@
         footer {
             text-align: center;
             padding: 2.5rem;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
             color: var(--text-secondary);
             font-size: 0.85rem;
             border-top: 1px solid var(--border-color);
@@ -267,6 +321,105 @@
     </style>
 </head>
 <body>
+
+    <!-- Floating Code Overlay Background -->
+    <div class="code-bg">
+        <!-- Column 1: Lua -->
+        <div class="code-column col-1">
+            <div class="code-block">
+                <div class="lang-tag">// LUA</div>
+AddEventHandler('playerConnecting', function(name, setKickReason, deferrals)
+    deferrals.defer()
+    Citizen.Wait(50)
+    deferrals.update('Verifying TurboV clearance...')
+    Citizen.Wait(100)
+    deferrals.done()
+end)
+            </div>
+            <div class="code-block">
+                <div class="lang-tag">// PYTHON</div>
+async def connect_network(node_id: str):
+    await asyncio.sleep(0.05)
+    return {"status": 200, "active": True}
+            </div>
+        </div>
+
+        <!-- Column 2: C++ -->
+        <div class="code-column col-2">
+            <div class="code-block">
+                <div class="lang-tag">// C++</div>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+template&lt;typename T&gt;
+class ServerNode {
+public:
+    void Init() {
+        std::cout &lt;&lt; "TurboV Online\n";
+    }
+};
+            </div>
+            <div class="code-block">
+                <div class="lang-tag">// LUA</div>
+RegisterNetEvent('turbov:client:sync')
+AddEventHandler('turbov:client:sync', function(data)
+    TriggerServerEvent('turbov:server:validate', data)
+end)
+            </div>
+        </div>
+
+        <!-- Column 3: C# -->
+        <div class="code-column col-3">
+            <div class="code-block">
+                <div class="lang-tag">// C#</div>
+using System;
+using System.Threading.Tasks;
+
+namespace TurboV.Network
+{
+    public class CoreManager : CitizenScript
+    {
+        public async Task&lt;bool&gt; PingAsync()
+        {
+            await Delay(100);
+            return true;
+        }
+    }
+}
+            </div>
+            <div class="code-block">
+                <div class="lang-tag">// PYTHON</div>
+class ServerInstance:
+    def __init__(self, name):
+        self.name = name
+        self.players = []
+            </div>
+        </div>
+
+        <!-- Column 4: Python & C++ -->
+        <div class="code-column col-4">
+            <div class="code-block">
+                <div class="lang-tag">// PYTHON</div>
+import asyncio
+
+class NetworkCluster:
+    def __init__(self):
+        self.nodes = set()
+
+    async def broadcast(self, payload):
+        for node in self.nodes:
+            await node.send(payload)
+            </div>
+            <div class="code-block">
+                <div class="lang-tag">// C++</div>
+int main() {
+    ServerNode&lt;int&gt; node;
+    node.Init();
+    return 0;
+}
+            </div>
+        </div>
+    </div>
 
     <!-- Header Section -->
     <header>
