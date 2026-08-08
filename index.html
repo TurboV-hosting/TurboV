@@ -182,6 +182,9 @@
             position: relative;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .server-card:hover {
@@ -195,7 +198,7 @@
             width: 110px;
             height: 110px;
             object-fit: contain;
-            margin-bottom: 1.5rem;
+            margin: 0 auto 1.5rem;
             filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.1));
             transition: transform 0.4s ease;
         }
@@ -218,6 +221,46 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             margin-bottom: 2rem;
+        }
+
+        /* "More Coming Soon" Specific Card Styling */
+        .server-card.coming-soon {
+            border-style: dashed;
+            opacity: 0.85;
+            cursor: pointer;
+        }
+
+        .server-card.coming-soon:hover {
+            opacity: 1;
+        }
+
+        .coming-soon-icon {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 2.5rem;
+            color: var(--text-secondary);
+            transition: all 0.4s ease;
+        }
+
+        .server-card.coming-soon:hover .coming-soon-icon {
+            border-color: #ffffff;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+            transform: scale(1.05) rotate(90deg);
+        }
+
+        .coming-soon-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.5;
         }
 
         /* Button Styling */
@@ -260,6 +303,130 @@
             border-color: #ffffff;
             color: #ffffff;
             box-shadow: none;
+        }
+
+        .btn-clickable {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .btn-clickable:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* ------------------------------------ */
+        /* Modal Popup Styling */
+        /* ------------------------------------ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid var(--border-hover);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 450px;
+            padding: 2.5rem;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 255, 255, 0.1);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.2rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .modal-close:hover {
+            color: #ffffff;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            background: linear-gradient(180deg, #ffffff 0%, #aaaaaa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .games-list {
+            list-style: none;
+            margin-bottom: 2rem;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .games-list li {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-weight: 600;
+            text-transform: capitalize;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .games-list li::before {
+            content: '•';
+            color: #ffffff;
+            font-size: 1.2rem;
+        }
+
+        .modal-footer {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.2rem;
+        }
+
+        .modal-footer a {
+            color: #ffffff;
+            text-decoration: underline;
+            font-weight: 600;
         }
 
         /* Minimalist Modern Footer */
@@ -362,7 +529,7 @@ public:
             <div class="code-block">
                 <div class="lang-tag">// LUA</div>
 RegisterNetEvent('turbov:client:sync')
-AddEventHandler('turbov:client:sync', function(data)
+AddEventHandler('turbov:server:validate', function(data)
     TriggerServerEvent('turbov:server:validate', data)
 end)
             </div>
@@ -437,12 +604,27 @@ int main() {
             <div class="servers-grid">
                 <!-- Australian Roleplay Card -->
                 <div class="server-card">
-                    <img src="aurp.png" alt="Australian Roleplay Logo" class="server-logo">
-                    <h3>Australian Roleplay</h3>
-                    <p class="subtitle">FiveM / GTARP</p>
+                    <div>
+                        <img src="aurp.png" alt="Australian Roleplay Logo" class="server-logo">
+                        <h3>Australian Roleplay</h3>
+                        <p class="subtitle">FiveM / GTARP</p>
+                    </div>
                     <div class="card-buttons">
                         <a href="https://cfx.re/join/5ooy8lr" class="btn" target="_blank">Connect Now</a>
                         <a href="https://discord.gg/CVedgwW4W4" class="btn btn-discord" target="_blank">Join Discord</a>
+                    </div>
+                </div>
+
+                <!-- More Coming Soon Card -->
+                <div class="server-card coming-soon" id="openModalCard">
+                    <div>
+                        <div class="coming-soon-icon">+</div>
+                        <h3>New Project</h3>
+                        <p class="subtitle">In Development</p>
+                        <p class="coming-soon-desc">More game servers are on the way. Join our main Discord for updates and announcements!</p>
+                    </div>
+                    <div class="card-buttons">
+                        <span class="btn btn-clickable" id="openModalBtn">More Coming Soon</span>
                     </div>
                 </div>
             </div>
@@ -450,11 +632,63 @@ int main() {
 
     </div>
 
+    <!-- Modal Popup Structure -->
+    <div class="modal-overlay" id="plansModal">
+        <div class="modal-container">
+            <button class="modal-close" id="closeModalBtn">&times;</button>
+            <h3 class="modal-title">WE HAVE PLANS!</h3>
+            <ul class="games-list">
+                <li>Arma Reforger</li>
+                <li>Minecraft</li>
+                <li>Assetto Corsa</li>
+                <li>Unturned</li>
+            </ul>
+            <div class="modal-footer">
+                Have suggestions? Let us know!<br>
+                <a href="mailto:support@turbov.dev">support@turbov.dev</a>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer Section -->
     <footer>
         <p>&copy; TurboV Gaming Network. All rights reserved.</p>
         <p><a href="https://discord.gg/Vav64w87Sd" class="footer-link" target="_blank">TurboV Network Discord Server</a></p>
     </footer>
+
+    <!-- JavaScript for Modal Interactions -->
+    <script>
+        const modal = document.getElementById('plansModal');
+        const openCard = document.getElementById('openModalCard');
+        const openBtn = document.getElementById('openModalBtn');
+        const closeBtn = document.getElementById('closeModalBtn');
+
+        function showModal() {
+            modal.classList.add('active');
+        }
+
+        function hideModal() {
+            modal.classList.remove('active');
+        }
+
+        // Open modal when clicking the card or the button
+        openCard.addEventListener('click', showModal);
+        openBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevents double triggers
+            showModal();
+        });
+
+        // Close modal when clicking 'X' or clicking outside the container
+        closeBtn.addEventListener('click', hideModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) hideModal();
+        });
+
+        // Close modal on 'Esc' key press
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') hideModal();
+        });
+    </script>
 
 </body>
 </html>
