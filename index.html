@@ -477,6 +477,84 @@
         }
 
         /* ------------------------------------ */
+        /* Modern Toast Notification Container */
+        /* ------------------------------------ */
+        #toastContainer {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            pointer-events: none;
+        }
+
+        .toast-notification {
+            pointer-events: auto;
+            min-width: 320px;
+            max-width: 420px;
+            background: rgba(18, 18, 20, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.85rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.05);
+            transform: translateX(120%);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+            cursor: pointer;
+        }
+
+        .toast-notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+
+        .toast-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .toast-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.3px;
+        }
+
+        .toast-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .toast-notification.error .toast-icon {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #ef4444;
+        }
+
+        /* ------------------------------------ */
         /* Minimalist Modern Footer */
         /* ------------------------------------ */
         footer {
@@ -560,6 +638,9 @@
     </style>
 </head>
 <body>
+
+    <!-- Container for dynamic modern toasts -->
+    <div id="toastContainer"></div>
 
     <!-- Floating Code Overlay Background -->
     <div class="code-bg">
@@ -804,6 +885,45 @@ int main() {
             }
         });
 
+        /* --- Modern Toast Notification Function --- */
+        function showToast(title, description, isError = false) {
+            const container = document.getElementById('toastContainer');
+            
+            const toast = document.createElement('div');
+            toast.className = `toast-notification ${isError ? 'error' : ''}`;
+            
+            const iconSymbol = isError ? '✕' : '✓';
+            
+            toast.innerHTML = `
+                <div class="toast-icon">${iconSymbol}</div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-desc">${description}</div>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Trigger animation frame for CSS transition
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+            
+            // Dismiss handler function
+            const dismissToast = () => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => {
+                    toast.remove();
+                });
+            };
+
+            // Allow click to dismiss immediately
+            toast.addEventListener('click', dismissToast);
+            
+            // Auto dismiss after 5 seconds
+            setTimeout(dismissToast, 5000);
+        }
+
         /* --- Discord Webhook Dispatch --- */
         partnerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -843,15 +963,26 @@ int main() {
                 });
 
                 if (response.ok) {
-                    alert('Proposal submitted successfully! We will get back to you soon.');
+                    showToast(
+                        'Proposal Sent!', 
+                        'Thanks for reaching out — our team will check out your offer and respond shortly.'
+                    );
                     partnerForm.reset();
                     hidePartnerModal();
                 } else {
-                    alert('Failed to send request. Please try contacting us via Discord.');
+                    showToast(
+                        'Couldn\'t send proposal', 
+                        'Something went wrong on our end. Try dropping us a message in Discord instead!',
+                        true
+                    );
                 }
             } catch (err) {
                 console.error(err);
-                alert('An error occurred while sending the request.');
+                showToast(
+                    'Connection Error', 
+                    'Looks like a network error occurred. Please try again or reach out on Discord.',
+                    true
+                );
             } finally {
                 submitPartnerBtn.innerText = "Send Proposal";
                 submitPartnerBtn.disabled = false;
