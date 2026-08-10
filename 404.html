@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Lost in the Dark</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glow-container">
+        <div class="red-pulse"></div>
+    </div>
+
+    <main class="container">
+        <div class="glitch-wrapper">
+            <h1 class="error-code" data-text="404">404</h1>
+        </div>
+        
+        <div class="divider"></div>
+
+        <h2 class="headline">SYSTEM ERROR: PAGE NOT FOUND</h2>
+        <p class="subtext">
+            The void consumed this URL, or maybe it never existed in the first place.
+        </p>
+
+        <div class="actions">
+            <a href="/" class="btn btn-primary">Return to Safety</a>
+            <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
+        </div>
+    </main>
+
+    <script>
+        // Subtle dynamic mouse light effect
+        document.addEventListener('mousemove', (e) => {
+            const pulse = document.querySelector('.red-pulse');
+            const x = e.clientX;
+            const y = e.clientY;
+            pulse.style.transform = `translate(${x - 150}px, ${y - 150}px)`;
+        });
+    </script>
+</body>
+</html>
