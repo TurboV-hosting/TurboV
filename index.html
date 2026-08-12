@@ -768,6 +768,18 @@ int main() {
                     </div>
                 </div>
 
+                <!-- The Dead War Card -->
+                <div class="server-card">
+                    <div>
+                        <img src="thedeadwar.png" alt="The Dead War Logo" class="server-logo">
+                        <h3>The Dead War</h3>
+                        <p class="subtitle">Arma Reforger</p>
+                    </div>
+                    <div class="card-buttons">
+                        <a href="https://thedeadwar.turbov.dev/" class="btn" target="_blank">Connect Now</a>
+                    </div>
+                </div>
+
                 <!-- More Coming Soon Card -->
                 <div class="server-card coming-soon" id="openModalCard">
                     <div>
@@ -845,7 +857,7 @@ int main() {
         const modal = document.getElementById('plansModal');
         const openCard = document.getElementById('openModalCard');
         const openBtn = document.getElementById('openModalBtn');
-        const closeBtn = document.getElementById('closeModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
 
         function showModal() { modal.classList.add('active'); }
         function hideModal() { modal.classList.remove('active'); }
@@ -855,7 +867,7 @@ int main() {
             e.stopPropagation();
             showModal();
         });
-        closeBtn.addEventListener('click', hideModal);
+        closeModalBtn.addEventListener('click', hideModal);
 
         /* --- Partner Modal Code --- */
         const partnerModal = document.getElementById('partnerModal');
