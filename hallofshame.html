@@ -67,4 +67,107 @@
             text-align: center;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             animation: floatCard 4s ease-in-out infinite;
-            transition: transform 0.3s ease, box-shadow 0.3s ease
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .shame-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 71, 87, 0.2);
+        }
+
+        .img-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 2px solid var(--accent-red);
+            margin-bottom: 20px;
+        }
+
+        .img-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 10px;
+            transition: transform 0.5s ease;
+        }
+
+        .shame-card:hover .img-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: rgba(255, 71, 87, 0.15);
+            color: var(--accent-red);
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 6px 14px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+
+        .description {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--text-main);
+        }
+
+        footer {
+            margin-top: 50px;
+            color: var(--text-sub);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+
+        /* Animations */
+        @keyframes floatCard {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        @keyframes pulseText {
+            0% {
+                opacity: 0.85;
+                text-shadow: 0 0 5px rgba(255, 71, 87, 0.4);
+            }
+            100% {
+                opacity: 1;
+                text-shadow: 0 0 18px rgba(255, 71, 87, 0.8);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>The Hall of Shame</h1>
+        <p class="subtitle">Exposing policy violations and automated spam</p>
+    </header>
+
+    <main class="shame-container">
+        <div class="shame-card">
+            <div class="img-wrapper">
+                <img src="1.png" alt="Offender evidence screenshot">
+            </div>
+            <span class="badge">Offender #1</span>
+            <p class="description">Person abusing our webhooks</p>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 Hall of Shame Archives
+    </footer>
+
+</body>
+</html>
